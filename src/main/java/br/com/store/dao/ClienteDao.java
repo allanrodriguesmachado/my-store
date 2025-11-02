@@ -32,8 +32,25 @@ public class ClienteDao {
         return client;
     }
 
-    public List<Client> list() {
+    public List<Client> list() throws SQLException{
         List<Client> clients = new ArrayList<>();
-        
+        String sql = "SELECT id, name, email, contact FROM clients";
+
+        try (Connection connection = ConnectDB.connection()){
+            var stmt = connection.prepareStatement(sql);
+            var resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                Integer id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                String contact = resultSet.getString("contact");
+
+
+                clients.add(new Client(id, name, email, contact));
+            }
+        }
+
+        return clients;
     }
 }
