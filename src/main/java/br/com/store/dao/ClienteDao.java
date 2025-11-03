@@ -32,11 +32,11 @@ public class ClienteDao {
         return client;
     }
 
-    public List<Client> list() throws SQLException{
+    public List<Client> list() throws SQLException {
         List<Client> clients = new ArrayList<>();
-        String sql = "SELECT id, name, email, contact FROM clients";
+        String sql = "SELECT id, name, email, contact FROM clients WHERE ts_canceled IS NULL";
 
-        try (Connection connection = ConnectDB.connection()){
+        try (Connection connection = ConnectDB.connection()) {
             var stmt = connection.prepareStatement(sql);
             var resultSet = stmt.executeQuery();
 
@@ -46,11 +46,47 @@ public class ClienteDao {
                 String email = resultSet.getString("email");
                 String contact = resultSet.getString("contact");
 
-
                 clients.add(new Client(id, name, email, contact));
             }
         }
 
         return clients;
+    }
+
+    public List<Client> listId(Integer idClient) throws SQLException {
+        List<Client> client = new ArrayList<>();
+        String SQL = "SELECT id, name, email, contact FROM clients WHERE id = ? AND ts_canceled IS NULL";
+
+        try (Connection conn = ConnectDB.connection()) {
+            var stmt = conn.prepareStatement(SQL);
+            stmt.setInt(1, idClient);
+            var result = stmt.executeQuery();
+
+            System.out.println(idClient);
+
+            while (result.next()) {
+                Integer id = result.getInt("id");
+                String name = result.getString("name");
+                String email = result.getString("email");
+                String contact = result.getString("contact");
+
+                client.add(new Client(id, name, email, contact));
+            }
+        }
+
+        return client;
+    }
+
+    public Client canceled(Integer id) throws SQLException {
+        String SQL = "UPDATE clients SET ts_canceled = CURRENT_TIMESTAMP WHERE id = ?";
+
+        try (Connection conn = ConnectDB.connection()) {
+            var stmt = conn.prepareStatement(SQL);
+            stmt.setInt(1, id);
+
+            stmt.executeUpdate();
+        }
+
+        return null;
     }
 }
