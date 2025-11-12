@@ -1,7 +1,6 @@
 package br.com.store;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -43,7 +42,9 @@ public class Main {
                         System.out.println("\n--- CRUD Clientes (Java Puro + JDBC) ---");
                         System.out.println("1. Listar");
                         System.out.println("2. Listar um cliente, infor o ID)");
-                        System.out.println("3. Sair");
+                        System.out.println("3. Cancelar");
+                        System.out.println("4. Sair");
+
                         System.out.print("Escolha uma opção: ");
 
                         int option2 = sc.nextInt();
@@ -63,11 +64,23 @@ public class Main {
                                 int idClient = sc.nextInt();
                                 sc.nextLine();
                                 List<Client> clientId = clienteDAO.listId(idClient);
+
+                                if (clientId.size() == 0) {
+                                    System.out.println("Cliente nao localizado");
+                                }
+
                                 for (Client c : clientId) {
                                     System.out.println("Id:: " + c.getId());
                                     System.out.println("Nome: " + c.getEmail());
                                 }
-
+                                break;
+                            case 3:
+                                System.out.println("Digite o ID que deseja cancelar");
+                                System.out.print("Digite: ");
+                                int idCanceled = sc.nextInt();
+                                sc.nextLine();
+                                System.out.println("3. Cancelar");
+                                clienteDAO.canceled(idCanceled);
                             default:
                                 break;
                         }
