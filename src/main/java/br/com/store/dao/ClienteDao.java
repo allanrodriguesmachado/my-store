@@ -62,8 +62,6 @@ public class ClienteDao {
             stmt.setInt(1, idClient);
             var result = stmt.executeQuery();
 
-            System.out.println(idClient);
-
             while (result.next()) {
                 Integer id = result.getInt("id");
                 String name = result.getString("name");
